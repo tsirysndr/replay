@@ -2,6 +2,13 @@
 name = "replay"
 version = "0.1.0"
 edition = "2024"
+description = "A simple HTTP request replay tool"
+license = "Apache-2.0"
+keywords = ["http", "replay", "cli"]
+readme = "README.md"
+repository = "https://github.com/tsirysndr/replay"
+categories = ["command-line-utilities", "development-tools"]
+authors = ["Tsiry Sandratraina <tsiry.sndr@rocksky.app>"]
 
 [dependencies]
 actix-web = "4.10.2"
