@@ -1,5 +1,9 @@
 # Replay
 
+[![ci](https://github.com/tsirysndr/replay/actions/workflows/ci.yml/badge.svg)](https://github.com/tsirysndr/replay/actions/workflows/ci.yml)
+[![downloads](https://img.shields.io/crates/dr/replay)](https://crates.io/crates/replay)
+[![crates](https://img.shields.io/crates/v/replay.svg)](https://crates.io/crates/replay)
+
 This tool acts as a transparent HTTP proxy that intercepts and records all incoming and outgoing requests and responses. You can later replay these captured interactions to mock the real API without needing live network access — ideal for:
 
 - End-to-end tests
