@@ -23,7 +23,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     Sniff and replay HTTP requests and responses — perfect for mocking APIs during testing.
     "#;
     let matches = Command::new("replay")
-        .version("0.1.0")
+        .version(env!("CARGO_PKG_VERSION"))
         .author("Tsiry Sandratraina <tsiry.sndr@rocksky.app>")
         .about(&format!("{}", BANNER.magenta()))
         .arg(
