@@ -13,6 +13,12 @@ This tool acts as a transparent HTTP proxy that intercepts and records all incom
 
 ![Preview](https://raw.githubusercontent.com/tsirysndr/replay/main/.github/assets/preview.png)
 
+## 🚚 Installation
+
+```sh
+cargo-binstall replay
+```
+
 ## ✨ Features
 - 🧲 Record HTTP traffic in real time
 - 🧪 Replay and mock previously recorded requests
