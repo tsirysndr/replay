@@ -7,7 +7,7 @@ This tool acts as a transparent HTTP proxy that intercepts and records all incom
 - Offline development
 - Contract testing
 
-![Preview](./.github/assets/preview.png)
+![Preview](https://raw.githubusercontent.com/tsirysndr/replay/main/.github/assets/preview.png)
 
 ## ✨ Features
 - 🧲 Record HTTP traffic in real time
