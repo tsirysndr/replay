@@ -94,10 +94,12 @@ pub async fn start_server(target: &str, listen: &str) -> Result<(), Box<dyn std:
           });
 
           if let Err(err) = http1::Builder::new()
+                .keep_alive(false)  // Disable keep-alive
+                .max_buf_size(30 * 1024 * 1024) // 30 MB
               .serve_connection(io, service)
               .await
           {
-              eprintln!("Connection error: {}", err);
+              eprintln!("> Connection error: {}", err);
           }
       });
   }
