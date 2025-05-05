@@ -1,9 +1,10 @@
 
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc};
 
 use clap::{Arg, Command};
 use owo_colors::OwoColorize;
 use proxy::start_server;
+use tokio::sync::Mutex;
 
 pub mod proxy;
 pub mod replay;
@@ -50,7 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let logs = store::load_logs_from_file(proxy::PROXY_LOG_FILE)?;
         let logs = Arc::new(Mutex::new(logs));
         let listen = matches.get_one::<String>("listen").unwrap();
-        println!("Loaded {} mocks from {}", logs.lock().unwrap().len().magenta(), proxy::PROXY_LOG_FILE.magenta());
+        println!("Loaded {} mocks from {}", logs.lock().await.len().magenta(), proxy::PROXY_LOG_FILE.magenta());
         println!("Replay server is running on {}", listen.magenta());
         replay::start_replay_server(logs, listen).await?;
         return Ok(());

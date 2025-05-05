@@ -6,7 +6,7 @@ use owo_colors::OwoColorize;
 
 pub async fn start_replay_server(logs: LogStore, bind_address: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
   if let Ok(file_logs) = load_logs_from_file(PROXY_LOG_FILE) {
-      let mut logs_guard = logs.lock().unwrap();
+      let mut logs_guard = logs.lock().await;
       for log in file_logs {
           logs_guard.push(log);
       }
@@ -34,7 +34,7 @@ pub async fn start_replay_server(logs: LogStore, bind_address: &str) -> Result<(
       println!("Replay server received request: {}", key.magenta());
 
       let response = {
-          let logs_guard = logs.lock().unwrap();
+          let logs_guard = logs.lock().await;
           logs_guard.iter()
               .find(|log| {
                   let log_key = build_request_key(
@@ -75,7 +75,7 @@ pub async fn start_replay_server(logs: LogStore, bind_address: &str) -> Result<(
   }
 
   async fn list_requests(logs: web::Data<LogStore>) -> impl Responder {
-      let logs_guard = logs.lock().unwrap();
+      let logs_guard = logs.lock().await;
       let requests: Vec<_> = logs_guard.iter().map(|log| {
           let key = build_request_key(
               &log.request.method,

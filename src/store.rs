@@ -2,18 +2,20 @@ use std::{
     fs::{File, OpenOptions},
     io::Write,
     path::Path,
-    sync::{Arc, Mutex},
+    sync::Arc,
 };
+
+use tokio::sync::Mutex;
 
 use crate::proxy::ProxyLog;
 
 pub type LogStore = Arc<Mutex<Vec<ProxyLog>>>;
 
-pub fn save_logs_to_file(
+pub async fn save_logs_to_file(
     logs: &LogStore,
     filename: &str,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let logs_guard = logs.lock().unwrap();
+    let logs_guard = logs.lock().await;
 
     if logs_guard.is_empty() {
         return Ok(());

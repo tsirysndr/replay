@@ -1,10 +1,10 @@
-use std::{process::exit, sync::{Arc, Mutex}, thread, time::{SystemTime, UNIX_EPOCH}};
+use std::{process::exit, sync::Arc, thread, time::{SystemTime, UNIX_EPOCH}};
 
 use http_body_util::{BodyExt, Full};
 use hyper::{body::{Buf, Bytes, Incoming}, server::conn::http1, Request, Response};
 use owo_colors::OwoColorize;
 use serde::{Deserialize, Serialize};
-use tokio::net::TcpListener;
+use tokio::{net::TcpListener, sync::Mutex};
 use hyper_util::rt::TokioIo;
 
 use crate::{replay::start_replay_server, store::{save_logs_to_file, LogStore}};
@@ -46,9 +46,8 @@ pub async fn start_server(target: &str, listen: &str) -> Result<(), Box<dyn std:
   tokio::spawn(async move {
       loop {
           tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
-          save_logs_to_file(&logs_for_saving, PROXY_LOG_FILE).unwrap_or_else(|e| {
-              eprintln!("Error saving logs: {}", e);
-          });
+          save_logs_to_file(&logs_for_saving, PROXY_LOG_FILE).await
+                .unwrap_or_else(|e| eprintln!("Error saving logs to file: {}", e));
       }
   });
 
@@ -94,8 +93,8 @@ pub async fn start_server(target: &str, listen: &str) -> Result<(), Box<dyn std:
           });
 
           if let Err(err) = http1::Builder::new()
-                .keep_alive(false)  // Disable keep-alive
-                .max_buf_size(30 * 1024 * 1024) // 30 MB
+                .keep_alive(false)
+                .max_buf_size(30 * 1024 * 1024)
               .serve_connection(io, service)
               .await
           {
@@ -262,7 +261,7 @@ pub async fn proxy_handler(
   };
 
   {
-    let mut logs_guard = logs.lock().unwrap();
+    let mut logs_guard = logs.lock().await;
     if !logs_guard.iter()
       .any(|log|
           log.request.method == log_entry.request.method &&
