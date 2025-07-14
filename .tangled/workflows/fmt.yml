@@ -1,0 +1,13 @@
+when:
+  - event: ["push", "pull_request"]
+    branch: ["main"]
+
+dependencies:
+  nixpkgs:
+    - cargo
+    - rustc
+
+steps:
+  - name: "cargo fmt"
+    command: |
+       cargo fmt --all --check
