@@ -1,5 +1,4 @@
-
-use std::sync::{Arc};
+use std::sync::Arc;
 
 use clap::{Arg, Command};
 use owo_colors::OwoColorize;
@@ -31,32 +30,34 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             Arg::new("target")
                 .short('t')
                 .long("target")
-                .help("The target URL to replay the requests to")
+                .help("The target URL to replay the requests to"),
         )
         .arg(
             Arg::new("listen")
                 .short('l')
                 .long("listen")
                 .help("The address to listen on for incoming requests")
-                .default_value("127.0.0.1:6677")
+                .default_value("127.0.0.1:6677"),
         )
         .subcommand(
             Command::new("mock")
-                .about("Read mocks from replay_mock.json and start a replay server")
+                .about("Read mocks from replay_mock.json and start a replay server"),
         )
         .get_matches();
-
 
     if let Some(_) = matches.subcommand_matches("mock") {
         let logs = store::load_logs_from_file(proxy::PROXY_LOG_FILE)?;
         let logs = Arc::new(Mutex::new(logs));
         let listen = matches.get_one::<String>("listen").unwrap();
-        println!("Loaded {} mocks from {}", logs.lock().await.len().magenta(), proxy::PROXY_LOG_FILE.magenta());
+        println!(
+            "Loaded {} mocks from {}",
+            logs.lock().await.len().magenta(),
+            proxy::PROXY_LOG_FILE.magenta()
+        );
         println!("Replay server is running on {}", listen.magenta());
         replay::start_replay_server(logs, listen).await?;
         return Ok(());
     }
-
 
     let target = matches.get_one::<String>("target");
 
